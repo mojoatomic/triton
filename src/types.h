@@ -45,6 +45,7 @@ typedef enum {
     EVT_ASSERT_FAIL,
     EVT_I2C_ERROR,
     EVT_SENSOR_FAULT,
+    EVT_CORE1_STALL,
     EVT_COUNT
 } EventCode_t;
 
@@ -149,7 +150,8 @@ typedef union {
         uint16_t i2c_error       : 1;
         uint16_t sensor_fault    : 1;
         uint16_t watchdog        : 1;
-        uint16_t reserved        : 8;
+        uint16_t core1_stall     : 1;
+        uint16_t reserved        : 7;
     } bits;
     uint16_t all;
 } FaultFlags_t;
@@ -242,5 +244,14 @@ typedef struct {
 
 // Implemented in safety/emergency.c
 void p10_assert_fail(const char* file, int line, const char* cond);
+
+// ============================================================
+// CROSS-CORE SHARED STATE
+// ============================================================
+
+// Core 1 health monitoring - incremented each loop by Core 1
+extern volatile uint32_t g_core1_heartbeat;
+
+#define CORE1_READY_MAGIC 0xC0DE1001
 
 #endif // TYPES_H
