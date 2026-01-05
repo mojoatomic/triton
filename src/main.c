@@ -32,6 +32,9 @@
 #include "control/pitch_ctrl.h"
 #include "control/ballast_ctrl.h"
 
+// Cross-core shared state
+volatile uint32_t g_core1_heartbeat = 0;
+
 // Forward declarations
 void core0_main(void);
 void core1_main(void);
@@ -48,6 +51,7 @@ static void run_control_loop(StateMachine_t* sm, DepthController_t* dc,
                             const AttitudeReading_t* att, float dt);
 static void update_debug_output(uint32_t* loops, const StateMachine_t* sm,
                                const DepthReading_t* depth);
+static bool handle_core1_loop_start(void);
 
 int main(void) {
     // Initialize stdio for debug output
@@ -64,6 +68,20 @@ int main(void) {
 
     // Launch Core 1 (control logic)
     multicore_launch_core1(core1_main);
+
+    // Wait for Core 1 startup handshake (timeout after 1 second)
+    uint32_t timeout = 0;
+    while (!multicore_fifo_rvalid() && timeout < 1000) {
+        sleep_ms(1);
+        timeout++;
+    }
+
+    if (timeout >= 1000 || multicore_fifo_pop_blocking() != CORE1_READY_MAGIC) {
+        printf("Core 1 failed to start - emergency blow\n");
+        trigger_emergency_blow(EVT_CORE1_STALL);
+    } else {
+        printf("Core 1 startup confirmed\n");
+    }
 
     // Core 0 runs safety monitor
     core0_main();
@@ -243,9 +261,27 @@ static void update_debug_output(uint32_t* loops, const StateMachine_t* sm,
     }
 }
 
+static bool handle_core1_loop_start(void) {
+    P10_ASSERT(g_core1_heartbeat < UINT32_MAX);  // Prevent overflow
+
+    // Increment heartbeat for Core 0 health monitoring
+    g_core1_heartbeat++;
+
+    // Skip if in emergency
+    if (is_emergency_active()) {
+        sleep_ms(100);
+        return false;  // Skip control loop
+    }
+
+    return true;  // Continue with control loop
+}
+
 // Core 1: Control logic (50 Hz)
 void core1_main(void) {
     printf("Core 1: Control logic starting\n");
+
+    // Send startup handshake to Core 0
+    multicore_fifo_push_blocking(CORE1_READY_MAGIC);
 
     // Initialize hardware
     init_hardware();
@@ -270,9 +306,8 @@ void core1_main(void) {
         float dt = (now_us - last_loop_us) / 1000000.0f;
         last_loop_us = now_us;
 
-        // Skip if in emergency
-        if (is_emergency_active()) {
-            sleep_ms(100);
+        // Handle heartbeat and emergency check
+        if (!handle_core1_loop_start()) {
             continue;
         }
 

@@ -22,6 +22,11 @@ static volatile uint32_t g_last_rc_valid_ms = 0;
 static volatile int32_t g_current_depth_cm = 0;
 static volatile int16_t g_current_pitch_x10 = 0;
 
+// Core 1 health monitoring
+static uint32_t s_last_heartbeat = 0;
+static uint32_t s_stall_count = 0;
+#define CORE1_STALL_THRESHOLD 10  // 100ms at 100Hz
+
 // Core 1 interface functions
 void safety_update_rc_time(uint32_t ms) {
     P10_ASSERT(ms <= 0xFFFFFFFF);
@@ -112,6 +117,25 @@ static void check_sensors(void) {
     }
 }
 
+static void check_core1_health(void) {
+    P10_ASSERT(CORE1_STALL_THRESHOLD > 0);
+
+    if (g_core1_heartbeat == s_last_heartbeat) {
+        s_stall_count++;
+        if (s_stall_count > CORE1_STALL_THRESHOLD) {
+            if (!g_faults.bits.core1_stall) {
+                g_faults.bits.core1_stall = 1;
+                log_event(EVT_CORE1_STALL, 0, 0);
+                trigger_emergency_blow(EVT_CORE1_STALL);
+            }
+        }
+    } else {
+        s_stall_count = 0;
+        g_faults.bits.core1_stall = 0;  // Clear fault if heartbeat resumes
+    }
+    s_last_heartbeat = g_core1_heartbeat;
+}
+
 static void update_heartbeat_led(uint32_t now_ms) {
     P10_ASSERT(PIN_LED_STATUS < 30);  // Valid GPIO pin
 
@@ -138,10 +162,11 @@ void safety_monitor_run(void) {
     check_rc_signal(now_ms);
     check_battery();
     check_sensors();
+    check_core1_health();
 
     // 3. Trigger emergency if any critical fault
-    // Critical faults: signal_lost, low_battery, leak, depth_exceeded, pitch_exceeded
-    uint16_t critical_mask = 0x001F;  // First 5 bits
+    // Critical faults: signal_lost, low_battery, leak, depth_exceeded, pitch_exceeded, core1_stall
+    uint16_t critical_mask = 0x011F;  // First 5 bits + core1_stall (bit 8)
     if ((g_faults.all & critical_mask) && !g_emergency) {
         trigger_emergency_blow(EVT_EMERGENCY_BLOW);
         g_emergency = true;
