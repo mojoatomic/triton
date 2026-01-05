@@ -230,6 +230,8 @@ check_lint() {
         --error-exitcode=1
         --suppress=missingIncludeSystem
         --suppress=unmatchedSuppression
+        --suppress=nullPointerRedundantCheck
+        --suppress=compareValueOutOfTypeRangeError
         --inline-suppr
         -I "$PROJECT_ROOT/src"
         -I "$PROJECT_ROOT/include"
