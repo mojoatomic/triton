@@ -1,0 +1,31 @@
+; PWM capture PIO program
+; Measures pulse width in microseconds
+
+.program pwm_capture
+
+.wrap_target
+    wait 0 pin 0        ; Wait for low
+    wait 1 pin 0        ; Wait for rising edge
+    mov x, ~null        ; Load max count
+count_high:
+    jmp pin, continue   ; If still high, continue
+    jmp done            ; If low, done
+continue:
+    jmp x--, count_high [1]
+done:
+    mov isr, ~x         ; Invert to get count
+    push noblock
+.wrap
+
+% c-sdk {
+static inline void pwm_capture_program_init(PIO pio, uint sm, uint offset, uint pin) {
+    pio_sm_config c = pwm_capture_program_get_default_config(offset);
+    sm_config_set_jmp_pin(&c, pin);
+    sm_config_set_in_pins(&c, pin);
+    pio_gpio_init(pio, pin);
+    pio_sm_set_consecutive_pindirs(pio, sm, pin, 1, false);
+    sm_config_set_clkdiv(&c, 62.5f);
+    pio_sm_init(pio, sm, offset, &c);
+    pio_sm_set_enabled(pio, sm, true);
+}
+%}
