@@ -213,7 +213,7 @@ static void fb_set_pixel(uint8_t x, uint8_t y, bool on) {
 static void fb_draw_char(uint8_t x, uint8_t y, char c) {
     P10_ASSERT(FONT_WIDTH > 0);
 
-    if (c < 32 || c > 127) {
+    if (c < 32 || c < 0) {
         c = '?';
     }
 
@@ -505,7 +505,7 @@ void display_fault(uint16_t fault_flags) {
     }
     if (fault_flags & 0x0008) {
         fb_draw_string(0, y, "Depth exceeded");
-        y += 10;
+        (void)y; // Suppress unused variable warning
     }
 
     display_refresh();
