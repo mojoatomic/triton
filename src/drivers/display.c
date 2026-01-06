@@ -213,7 +213,7 @@ static void fb_set_pixel(uint8_t x, uint8_t y, bool on) {
 static void fb_draw_char(uint8_t x, uint8_t y, char c) {
     P10_ASSERT(FONT_WIDTH > 0);
 
-    if (c < 32 || c < 0) {
+    if (c < 32) {
         c = '?';
     }
 
