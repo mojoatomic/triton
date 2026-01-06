@@ -1,0 +1,6 @@
+[*] Compiling /src/analysis/valve_test.c
+/src/analysis/valve_test.c:38:29: error: use of undeclared identifier 'GPIO_OUT'
+    gpio_set_dir(PIN_VALVE, GPIO_OUT);
+                            ^
+1 error generated.
+ikos: error while compiling /src/analysis/valve_test.c, abort.

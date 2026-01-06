@@ -1,0 +1,61 @@
+cmake_minimum_required(VERSION 3.13)
+
+project(triton_analysis C)
+
+set(CMAKE_C_STANDARD 11)
+
+# Host-compatible compiler flags
+add_compile_options(
+    -Wall
+    -Werror
+    -Wextra
+    -Wno-unused-parameter
+    -ffunction-sections
+    -fdata-sections
+    -DPICO_PLATFORM_RP2040=1
+    -D__ARM_ARCH_6M__=1
+)
+
+# Include directories
+include_directories(
+    ${CMAKE_CURRENT_SOURCE_DIR}/../src
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+# Source files (excluding main.c which has Pico-specific init)
+set(SOURCES
+    # Drivers
+    ../src/drivers/battery.c
+    ../src/drivers/pressure_sensor.c
+    ../src/drivers/servo.c
+    ../src/drivers/valve.c
+    ../src/drivers/pump.c
+    ../src/drivers/leak.c
+    ../src/drivers/rc_input.c
+    ../src/drivers/imu.c
+    ../src/drivers/display.c
+    
+    # Control
+    ../src/control/pid.c
+    ../src/control/depth_ctrl.c
+    ../src/control/pitch_ctrl.c
+    ../src/control/ballast_ctrl.c
+    ../src/control/state_machine.c
+    
+    # Safety
+    ../src/safety/safety_monitor.c
+    ../src/safety/emergency.c
+    ../src/safety/handshake.c
+    
+    # Utilities
+    ../src/util/log.c
+)
+
+# Create library instead of executable (since we don't have main)
+add_library(triton_lib ${SOURCES})
+
+# Set include directories for the library
+target_include_directories(triton_lib PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/../src
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)

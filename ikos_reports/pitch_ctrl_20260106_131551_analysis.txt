@@ -1,0 +1,9 @@
+[*] Compiling /src/analysis/pitch_ctrl_test.c
+/src/analysis/pitch_ctrl_test.c:100:27: error: too few arguments to function call, single argument 'ctrl' was not specified
+    err = pitch_ctrl_init();
+          ~~~~~~~~~~~~~~~ ^
+/src/analysis/pitch_ctrl_test.c:32:6: note: 'pitch_ctrl_init' declared here
+void pitch_ctrl_init(PitchController_t* ctrl) {
+     ^
+1 error generated.
+ikos: error while compiling /src/analysis/pitch_ctrl_test.c, abort.

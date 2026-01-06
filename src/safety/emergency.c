@@ -6,10 +6,10 @@
  */
 
 #include "emergency.h"
-#include "pump.h"
-#include "valve.h"
-#include "servo.h"
-#include "log.h"
+#include "drivers/pump.h"
+#include "drivers/valve.h"
+#include "drivers/servo.h"
+#include "util/log.h"
 #include "pico/time.h"
 #include "pico/stdlib.h"
 #include "hardware/watchdog.h"
@@ -17,9 +17,17 @@
 #include <stdio.h>
 #include <assert.h>
 
+// Event log pointer (set during init)
+static EventLog_t* s_log = NULL;
+
 // Emergency state (atomic - cannot be undone)
 static volatile bool emergency_active = false;
 static EventCode_t emergency_reason = EVT_NONE;
+
+void emergency_init(EventLog_t* log) {
+    P10_ASSERT(log != NULL);
+    s_log = log;
+}
 
 void trigger_emergency_blow(EventCode_t reason) {
     P10_ASSERT(reason < EVT_COUNT);
@@ -41,7 +49,10 @@ void trigger_emergency_blow(EventCode_t reason) {
     servo_set_position(SERVO_STERNPLANE, 100); // Full up
 
     // 4. Log the event
-    log_event(reason, 0, 0);
+    if (s_log != NULL) {
+        uint32_t now_ms = to_ms_since_boot(get_absolute_time());
+        log_event(s_log, now_ms, reason, 0, 0);
+    }
 }
 
 void emergency_blow_run(void) {
@@ -93,7 +104,10 @@ void p10_assert_fail(const char* file, int line, const char* cond) {
 
     // Log assertion failure
     printf("[FATAL] ASSERT FAIL: %s:%d: %s\n", file, line, cond);
-    log_event(EVT_ASSERT_FAIL, 0, 0);
+    if (s_log != NULL) {
+        uint32_t now_ms = to_ms_since_boot(get_absolute_time());
+        log_event(s_log, now_ms, EVT_ASSERT_FAIL, 0, 0);
+    }
 
     // Trigger emergency blow
     trigger_emergency_blow(EVT_ASSERT_FAIL);
@@ -111,7 +125,7 @@ void p10_assert_fail(const char* file, int line, const char* cond) {
     // If we get here, emergency didn't complete in 5 seconds
     // Force watchdog reset as last resort
     printf("[FATAL] Emergency timeout - forcing reset\n");
-    watchdog_force_reset();
+    watchdog_reboot(0, 0, 0);;
 
     // Should never reach here, but satisfy static analysis
     system_halt();

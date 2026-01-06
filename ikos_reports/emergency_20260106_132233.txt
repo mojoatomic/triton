@@ -1,0 +1,16 @@
+[*] Compiling /tmp/ikos_triton_8130/emergency_test.c
+In file included from /tmp/ikos_triton_8130/emergency_test.c:6:
+/src/analysis/pico_stubs.h:267:17: error: typedef redefinition with different types ('int64_t' (aka 'long') vs 'struct absolute_time_t')
+typedef int64_t absolute_time_t;
+                ^
+/src/analysis/pico_stubs.h:27:31: note: previous definition is here
+typedef struct { int dummy; } absolute_time_t;
+                              ^
+/src/analysis/pico_stubs.h:271:12: error: returning 'int' from a function with incompatible result type 'absolute_time_t'
+    return 0;
+           ^
+/tmp/ikos_triton_8130/emergency_test.c:31:10: fatal error: 'log.h' file not found
+#include "log.h"
+         ^~~~~~~
+3 errors generated.
+ikos: error while compiling /tmp/ikos_triton_8130/emergency_test.c, abort.

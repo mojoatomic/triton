@@ -1,0 +1,36 @@
+[*] Compiling /src/analysis/servo_test.c
+/src/analysis/servo_test.c:61:9: warning: implicit declaration of function 'pwm_set_wrap' is invalid in C99 [-Wimplicit-function-declaration]
+        pwm_set_wrap(slice, (uint16_t)SERVO_PWM_WRAP);
+        ^
+/src/analysis/servo_test.c:62:9: warning: implicit declaration of function 'pwm_set_clkdiv' is invalid in C99 [-Wimplicit-function-declaration]
+        pwm_set_clkdiv(slice, SERVO_PWM_CLKDIV);
+        ^
+/src/analysis/servo_test.c:63:9: warning: implicit declaration of function 'pwm_set_enabled' is invalid in C99 [-Wimplicit-function-declaration]
+        pwm_set_enabled(slice, true);
+        ^
+3 warnings generated.
+[*] Running ikos preprocessor
+[*] Running ikos analyzer
+[*] Translating LLVM bitcode to AR
+[*] Running liveness analysis
+[*] Running widening hint analysis
+[*] Running interprocedural value analysis
+[*] Analyzing entry point 'main'
+[*] Checking properties for entry point 'main'
+
+# Time stats:
+clang        : 0.012 sec
+ikos-analyzer: 0.006 sec
+ikos-pp      : 0.002 sec
+
+# Summary:
+Total number of checks                : 0
+Total number of unreachable checks    : 0
+Total number of safe checks           : 0
+Total number of definite unsafe checks: 0
+Total number of warnings              : 0
+
+The program is SAFE
+
+# Results
+No entries.

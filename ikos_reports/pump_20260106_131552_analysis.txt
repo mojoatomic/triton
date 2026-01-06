@@ -1,0 +1,12 @@
+[*] Compiling /src/analysis/pump_test.c
+/src/analysis/pump_test.c:57:32: error: use of undeclared identifier 'GPIO_OUT'
+    gpio_set_dir(PIN_PUMP_DIR, GPIO_OUT);
+                               ^
+/src/analysis/pump_test.c:66:5: warning: implicit declaration of function 'pwm_set_wrap' is invalid in C99 [-Wimplicit-function-declaration]
+    pwm_set_wrap(s_slice_num, (uint16_t)PUMP_PWM_WRAP);
+    ^
+/src/analysis/pump_test.c:67:5: warning: implicit declaration of function 'pwm_set_clkdiv' is invalid in C99 [-Wimplicit-function-declaration]
+    pwm_set_clkdiv(s_slice_num, PUMP_PWM_CLKDIV);
+    ^
+2 warnings and 1 error generated.
+ikos: error while compiling /src/analysis/pump_test.c, abort.

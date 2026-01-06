@@ -1,0 +1,6 @@
+[*] Compiling /src/analysis/rc_input_test.c
+/src/analysis/rc_input_test.c:27:10: fatal error: 'pwm_capture.pio.h' file not found
+#include "pwm_capture.pio.h"
+         ^~~~~~~~~~~~~~~~~~~
+1 error generated.
+ikos: error while compiling /src/analysis/rc_input_test.c, abort.

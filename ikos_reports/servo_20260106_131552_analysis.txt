@@ -1,0 +1,103 @@
+[*] Compiling /src/analysis/servo_test.c
+/src/analysis/servo_test.c:71:9: warning: implicit declaration of function 'pwm_set_wrap' is invalid in C99 [-Wimplicit-function-declaration]
+        pwm_set_wrap(slice, (uint16_t)SERVO_PWM_WRAP);
+        ^
+/src/analysis/servo_test.c:72:9: warning: implicit declaration of function 'pwm_set_clkdiv' is invalid in C99 [-Wimplicit-function-declaration]
+        pwm_set_clkdiv(slice, SERVO_PWM_CLKDIV);
+        ^
+2 warnings generated.
+[*] Running ikos preprocessor
+[*] Running ikos analyzer
+[*] Translating LLVM bitcode to AR
+[*] Running liveness analysis
+[*] Running widening hint analysis
+[*] Running interprocedural value analysis
+[*] Analyzing entry point 'main'
+[*] Checking properties for entry point 'main'
+analysis/servo_test.c:98:11: [ok] check_initialized(@servo_init)
+analysis/servo_test.c:98:11: [ok] check_null_dereference(@servo_init): dereferencing a function pointer
+analysis/servo_test.c:61:5: [ok] check_initialized(@s_initialized)
+analysis/servo_test.c:61:5: [ok] check_initialized(%servo_init.1)
+analysis/servo_test.c:61:5: [ok] check_mem_access(pointer=%servo_init.1, access_size=1, address=GlobalMemoryLocation{@s_initialized}): ∀o ∈ offset, o <= 1 && o + access_size <= 1
+analysis/servo_test.c:61:5: [ok] check_null_dereference(%servo_init.1): pointer is non null
+analysis/servo_test.c:61:5: [ok] check_initialized(%servo_init.2)
+analysis/servo_test.c:61:5: [ok] check_initialized(%servo_init.3)
+analysis/servo_test.c:61:5: [ok] check_initialized(%servo_init.4)
+analysis/servo_test.c:61:5: [unreachable] check_mem_access(call @p10_assert_fail(%servo_init.5, 61, %servo_init.6))
+analysis/servo_test.c:61:5: [unreachable] check_null_dereference(call @p10_assert_fail(%servo_init.5, 61, %servo_init.6))
+analysis/servo_test.c:61:5: [ok] check_initialized(%servo_init.4)
+analysis/servo_test.c:63:9: [ok] check_initialized(@s_initialized)
+analysis/servo_test.c:63:9: [ok] check_initialized(%servo_init.7)
+analysis/servo_test.c:63:9: [ok] check_mem_access(pointer=%servo_init.7, access_size=1, address=GlobalMemoryLocation{@s_initialized}): ∀o ∈ offset, o <= 1 && o + access_size <= 1
+analysis/servo_test.c:63:9: [ok] check_null_dereference(%servo_init.7): pointer is non null
+analysis/servo_test.c:63:9: [ok] check_initialized(%servo_init.8)
+analysis/servo_test.c:63:9: [ok] check_initialized(%servo_init.9)
+analysis/servo_test.c:63:9: [ok] check_initialized(%servo_init.10)
+analysis/servo_test.c:63:9: [ok] check_initialized(%servo_init.10)
+analysis/servo_test.c:67:24: [ok] check_initialized(%servo_init..01)
+analysis/servo_test.c:68:27: [ok] check_initialized(%servo_init..01)
+analysis/servo_test.c:68:27: [ok] check_initialized(@s_servo_pins)
+analysis/servo_test.c:68:27: [ok] check_initialized(%servo_init.11)
+analysis/servo_test.c:68:27: [ok] check_initialized(%servo_init.12)
+analysis/servo_test.c:68:27: [ok] check_initialized(%servo_init.13)
+analysis/servo_test.c:68:27: [ok] check_mem_access(pointer=%servo_init.13, access_size=4, address=GlobalMemoryLocation{@s_servo_pins}): ∀o ∈ offset, o <= 4 && o + access_size <= 4
+analysis/servo_test.c:68:27: [ok] check_null_dereference(%servo_init.13): pointer is non null
+analysis/servo_test.c:68:9: [ok] check_initialized(@gpio_set_function)
+analysis/servo_test.c:68:9: [ok] check_initialized(%servo_init.14)
+analysis/servo_test.c:68:9: [ok] check_null_dereference(@gpio_set_function): dereferencing a function pointer
+analysis/servo_test.c:70:50: [ok] check_initialized(%servo_init..01)
+analysis/servo_test.c:70:50: [ok] check_initialized(@s_servo_pins)
+analysis/servo_test.c:70:50: [ok] check_initialized(%servo_init.15)
+analysis/servo_test.c:70:50: [ok] check_initialized(%servo_init.16)
+analysis/servo_test.c:70:50: [ok] check_initialized(%servo_init.17)
+analysis/servo_test.c:70:50: [ok] check_mem_access(pointer=%servo_init.17, access_size=4, address=GlobalMemoryLocation{@s_servo_pins}): ∀o ∈ offset, o <= 4 && o + access_size <= 4
+analysis/servo_test.c:70:50: [ok] check_null_dereference(%servo_init.17): pointer is non null
+analysis/servo_test.c:70:28: [ok] check_initialized(@pwm_gpio_to_slice_num)
+analysis/servo_test.c:70:28: [ok] check_initialized(%servo_init.18)
+analysis/servo_test.c:70:28: [ok] check_null_dereference(@pwm_gpio_to_slice_num): dereferencing a function pointer
+analysis/servo_test.c:71:9: [ok] check_initialized(@pwm_set_wrap)
+analysis/servo_test.c:71:9: [ok] check_initialized(%servo_init.20)
+analysis/servo_test.c:71:9: [ok] check_initialized(%servo_init.19)
+analysis/servo_test.c:71:9: [ok] check_null_dereference(%servo_init.20): pointer is non null
+analysis/servo_test.c:72:9: [ok] check_initialized(@pwm_set_clkdiv)
+analysis/servo_test.c:72:9: [ok] check_initialized(%servo_init.22)
+analysis/servo_test.c:72:9: [ok] check_initialized(%servo_init.19)
+analysis/servo_test.c:72:9: [ok] check_null_dereference(%servo_init.22): pointer is non null
+analysis/servo_test.c:73:9: [ok] check_initialized(@pwm_set_enabled)
+analysis/servo_test.c:73:9: [ok] check_initialized(%servo_init.19)
+analysis/servo_test.c:73:9: [ok] check_null_dereference(@pwm_set_enabled): dereferencing a function pointer
+analysis/servo_test.c:75:28: [ok] check_initialized(%servo_init..01)
+analysis/servo_test.c:75:28: [ok] check_initialized(@s_servo_pins)
+analysis/servo_test.c:75:28: [ok] check_initialized(%servo_init.24)
+analysis/servo_test.c:75:28: [ok] check_initialized(%servo_init.25)
+analysis/servo_test.c:75:28: [ok] check_initialized(%servo_init.26)
+analysis/servo_test.c:75:28: [ok] check_mem_access(pointer=%servo_init.26, access_size=4, address=GlobalMemoryLocation{@s_servo_pins}): ∀o ∈ offset, o <= 4 && o + access_size <= 4
+analysis/servo_test.c:75:28: [ok] check_null_dereference(%servo_init.26): pointer is non null
+analysis/servo_test.c:75:9: [ok] check_initialized(@pwm_set_gpio_level)
+analysis/servo_test.c:75:9: [ok] check_initialized(%servo_init.27)
+analysis/servo_test.c:75:9: [ok] check_null_dereference(@pwm_set_gpio_level): dereferencing a function pointer
+analysis/servo_test.c:67:46: [ok] check_initialized(%servo_init..01)
+analysis/servo_test.c:67:24: [ok] check_initialized(%servo_init..01)
+analysis/servo_test.c:78:19: [ok] check_initialized(@s_initialized)
+analysis/servo_test.c:78:19: [ok] check_mem_access(pointer=@s_initialized, access_size=1, address=GlobalMemoryLocation{@s_initialized}): ∀o ∈ offset, o <= 1 && o + access_size <= 1
+analysis/servo_test.c:78:19: [ok] check_null_dereference(@s_initialized): dereferencing a global variable
+analysis/servo_test.c:99:13: [ok] check_initialized(%main.1)
+analysis/servo_test.c:99:13: [ok] check_initialized(%main.1)
+analysis/servo_test.c:116:1: [ok] check_initialized(%main..0)
+
+# Time stats:
+clang        : 0.014 sec
+ikos-analyzer: 0.009 sec
+ikos-pp      : 0.003 sec
+
+# Summary:
+Total number of checks                : 40
+Total number of unreachable checks    : 0
+Total number of safe checks           : 40
+Total number of definite unsafe checks: 0
+Total number of warnings              : 0
+
+The program is SAFE
+
+# Results
+No entries.

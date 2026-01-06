@@ -1,0 +1,56 @@
+[*] Compiling /src/analysis/battery_test.c
+[*] Running ikos preprocessor
+[*] Running ikos analyzer
+[*] Translating LLVM bitcode to AR
+[*] Running liveness analysis
+[*] Running widening hint analysis
+[*] Running interprocedural value analysis
+[*] Analyzing entry point 'main'
+[*] Checking properties for entry point 'main'
+analysis/battery_test.c:81:11: [ok] check_null_dereference(@battery_init): dereferencing a function pointer
+analysis/battery_test.c:81:11: [ok] check_initialized(@battery_init)
+analysis/battery_test.c:30:5: [ok] check_initialized(@s_initialized)
+analysis/battery_test.c:30:5: [ok] check_null_dereference(%battery_init.1): pointer is non null
+analysis/battery_test.c:30:5: [ok] check_mem_access(pointer=%battery_init.1, access_size=1, address=GlobalMemoryLocation{@s_initialized}): ∀o ∈ offset, o <= 1 && o + access_size <= 1
+analysis/battery_test.c:30:5: [ok] check_initialized(%battery_init.1)
+analysis/battery_test.c:30:5: [ok] check_initialized(%battery_init.2)
+analysis/battery_test.c:30:5: [ok] check_initialized(%battery_init.3)
+analysis/battery_test.c:30:5: [ok] check_initialized(%battery_init.4)
+analysis/battery_test.c:30:5: [unreachable] check_null_dereference(call @p10_assert_fail(%battery_init.5, 30, %battery_init.6))
+analysis/battery_test.c:30:5: [unreachable] check_mem_access(call @p10_assert_fail(%battery_init.5, 30, %battery_init.6))
+analysis/battery_test.c:30:5: [ok] check_initialized(%battery_init.4)
+analysis/battery_test.c:32:9: [ok] check_initialized(@s_initialized)
+analysis/battery_test.c:32:9: [ok] check_null_dereference(%battery_init.7): pointer is non null
+analysis/battery_test.c:32:9: [ok] check_mem_access(pointer=%battery_init.7, access_size=1, address=GlobalMemoryLocation{@s_initialized}): ∀o ∈ offset, o <= 1 && o + access_size <= 1
+analysis/battery_test.c:32:9: [ok] check_initialized(%battery_init.7)
+analysis/battery_test.c:32:9: [ok] check_initialized(%battery_init.8)
+analysis/battery_test.c:32:9: [ok] check_initialized(%battery_init.9)
+analysis/battery_test.c:32:9: [ok] check_initialized(%battery_init.10)
+analysis/battery_test.c:32:9: [ok] check_initialized(%battery_init.10)
+analysis/battery_test.c:36:5: [ok] check_null_dereference(@adc_init): dereferencing a function pointer
+analysis/battery_test.c:36:5: [ok] check_initialized(@adc_init)
+analysis/battery_test.c:37:5: [ok] check_null_dereference(@adc_gpio_init): dereferencing a function pointer
+analysis/battery_test.c:37:5: [ok] check_initialized(@adc_gpio_init)
+analysis/battery_test.c:39:19: [ok] check_null_dereference(@s_initialized): dereferencing a global variable
+analysis/battery_test.c:39:19: [ok] check_mem_access(pointer=@s_initialized, access_size=1, address=GlobalMemoryLocation{@s_initialized}): ∀o ∈ offset, o <= 1 && o + access_size <= 1
+analysis/battery_test.c:39:19: [ok] check_initialized(@s_initialized)
+analysis/battery_test.c:82:13: [ok] check_initialized(%main.1)
+analysis/battery_test.c:82:13: [ok] check_initialized(%main.1)
+analysis/battery_test.c:99:1: [ok] check_initialized(%main..0)
+
+# Time stats:
+clang        : 0.012 sec
+ikos-analyzer: 0.010 sec
+ikos-pp      : 0.004 sec
+
+# Summary:
+Total number of checks                : 19
+Total number of unreachable checks    : 0
+Total number of safe checks           : 19
+Total number of definite unsafe checks: 0
+Total number of warnings              : 0
+
+The program is SAFE
+
+# Results
+No entries.

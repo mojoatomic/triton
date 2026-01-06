@@ -16,7 +16,7 @@ extern "C" {
 #endif
 
 // Safety monitor public API
-void safety_monitor_init(void);
+void safety_monitor_init(EventLog_t* log);
 void safety_monitor_run(void);
 FaultFlags_t safety_monitor_get_faults(void);
 bool safety_monitor_is_emergency(void);

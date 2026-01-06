@@ -1,0 +1,1 @@
+./ikos_quick_scan.sh: line 42: timeout: command not found

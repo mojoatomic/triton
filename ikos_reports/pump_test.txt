@@ -1,0 +1,36 @@
+[*] Compiling /src/analysis/pump_test.c
+/src/analysis/pump_test.c:56:5: warning: implicit declaration of function 'pwm_set_wrap' is invalid in C99 [-Wimplicit-function-declaration]
+    pwm_set_wrap(s_slice_num, (uint16_t)PUMP_PWM_WRAP);
+    ^
+/src/analysis/pump_test.c:57:5: warning: implicit declaration of function 'pwm_set_clkdiv' is invalid in C99 [-Wimplicit-function-declaration]
+    pwm_set_clkdiv(s_slice_num, PUMP_PWM_CLKDIV);
+    ^
+/src/analysis/pump_test.c:58:5: warning: implicit declaration of function 'pwm_set_enabled' is invalid in C99 [-Wimplicit-function-declaration]
+    pwm_set_enabled(s_slice_num, true);
+    ^
+3 warnings generated.
+[*] Running ikos preprocessor
+[*] Running ikos analyzer
+[*] Translating LLVM bitcode to AR
+[*] Running liveness analysis
+[*] Running widening hint analysis
+[*] Running interprocedural value analysis
+[*] Analyzing entry point 'main'
+[*] Checking properties for entry point 'main'
+
+# Time stats:
+clang        : 0.013 sec
+ikos-analyzer: 0.006 sec
+ikos-pp      : 0.002 sec
+
+# Summary:
+Total number of checks                : 0
+Total number of unreachable checks    : 0
+Total number of safe checks           : 0
+Total number of definite unsafe checks: 0
+Total number of warnings              : 0
+
+The program is SAFE
+
+# Results
+No entries.

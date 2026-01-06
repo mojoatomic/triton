@@ -1,0 +1,12 @@
+[*] Compiling /src/analysis/leak_test.c
+/src/analysis/leak_test.c:46:35: error: use of undeclared identifier 'GPIO_IN'
+    gpio_set_dir(PIN_LEAK_DETECT, GPIO_IN);
+                                  ^
+/src/analysis/leak_test.c:50:5: warning: implicit declaration of function 'gpio_set_irq_enabled_with_callback' is invalid in C99 [-Wimplicit-function-declaration]
+    gpio_set_irq_enabled_with_callback(PIN_LEAK_DETECT, GPIO_IRQ_EDGE_RISE, true, &leak_isr);
+    ^
+/src/analysis/leak_test.c:50:57: error: use of undeclared identifier 'GPIO_IRQ_EDGE_RISE'
+    gpio_set_irq_enabled_with_callback(PIN_LEAK_DETECT, GPIO_IRQ_EDGE_RISE, true, &leak_isr);
+                                                        ^
+1 warning and 2 errors generated.
+ikos: error while compiling /src/analysis/leak_test.c, abort.

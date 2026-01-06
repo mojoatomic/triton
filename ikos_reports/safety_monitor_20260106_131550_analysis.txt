@@ -1,0 +1,6 @@
+[*] Compiling /src/analysis/safety_monitor_test.c
+/src/analysis/safety_monitor_test.c:27:10: fatal error: 'log.h' file not found
+#include "log.h"
+         ^~~~~~~
+1 error generated.
+ikos: error while compiling /src/analysis/safety_monitor_test.c, abort.
