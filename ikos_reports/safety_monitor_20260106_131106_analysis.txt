@@ -1,0 +1,2 @@
+usage: ikos [options] file[.c|.cpp|.bc|.ll]
+ikos: error: the following arguments are required: file[.c|.cpp|.bc|.ll]

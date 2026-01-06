@@ -1,0 +1,6 @@
+[*] Compiling /src/src/safety/safety_monitor.c
+/src/src/safety/safety_monitor.c:11:10: fatal error: 'battery.h' file not found
+#include "battery.h"
+         ^~~~~~~~~~~
+1 error generated.
+ikos: error while compiling /src/src/safety/safety_monitor.c, abort.

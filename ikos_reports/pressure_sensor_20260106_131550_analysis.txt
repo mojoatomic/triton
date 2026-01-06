@@ -1,0 +1,138 @@
+[*] Compiling /src/analysis/pressure_sensor_test.c
+[*] Running ikos preprocessor
+[*] Running ikos analyzer
+[*] Translating LLVM bitcode to AR
+[*] Running liveness analysis
+[*] Running widening hint analysis
+[*] Running interprocedural value analysis
+[*] Analyzing entry point 'main'
+[*] Checking properties for entry point 'main'
+analysis/pressure_sensor_test.c:194:11: [ok] check_initialized(@pressure_sensor_init)
+analysis/pressure_sensor_test.c:194:11: [ok] check_null_dereference(@pressure_sensor_init): dereferencing a function pointer
+analysis/pressure_sensor_test.c:146:19: [ok] check_initialized(@write_cmd)
+analysis/pressure_sensor_test.c:146:19: [ok] check_null_dereference(@write_cmd): dereferencing a function pointer
+analysis/pressure_sensor_test.c:37:34: [ok] check_initialized($write_cmd.3)
+analysis/pressure_sensor_test.c:37:34: [ok] check_initialized(%write_cmd.1)
+analysis/pressure_sensor_test.c:37:34: [ok] check_mem_access(pointer=$write_cmd.3, access_size=1, address=LocalMemoryLocation{$write_cmd.3}): ∀o ∈ offset, o <= 1 && o + access_size <= 1
+analysis/pressure_sensor_test.c:37:34: [ok] check_null_dereference($write_cmd.3): dereferencing a local variable
+analysis/pressure_sensor_test.c:0:0: [ok] check_initialized(%write_cmd.2)
+analysis/pressure_sensor_test.c:40:72: [ok] check_initialized(%write_cmd.4)
+analysis/pressure_sensor_test.c:40:21: [ok] check_initialized(@i2c_write_blocking)
+analysis/pressure_sensor_test.c:40:21: [ok] check_initialized(%write_cmd.6)
+analysis/pressure_sensor_test.c:40:21: [ok] check_initialized($write_cmd.3)
+analysis/pressure_sensor_test.c:40:21: [ok] check_initialized(%write_cmd.5)
+analysis/pressure_sensor_test.c:40:21: [ok] check_null_dereference(@i2c_write_blocking): dereferencing a function pointer
+analysis/pico_stubs.h:63:12: [ok] check_initialized(%i2c_write_blocking.4)
+analysis/pico_stubs.h:63:12: [ok] check_initialized(%i2c_write_blocking.6)
+analysis/pico_stubs.h:63:5: [ok] check_initialized(%i2c_write_blocking.7)
+analysis/pressure_sensor_test.c:41:17: [ok] check_initialized(%write_cmd.7)
+analysis/pressure_sensor_test.c:41:17: [ok] check_initialized(%write_cmd.7)
+analysis/pressure_sensor_test.c:41:5: [ok] check_initialized(%write_cmd.8)
+analysis/pressure_sensor_test.c:147:13: [ok] check_initialized(%pressure_sensor_init.1)
+analysis/pressure_sensor_test.c:147:13: [ok] check_initialized(%pressure_sensor_init.1)
+analysis/pressure_sensor_test.c:151:5: [ok] check_initialized(@sleep_ms)
+analysis/pressure_sensor_test.c:151:5: [ok] check_null_dereference(@sleep_ms): dereferencing a function pointer
+analysis/pressure_sensor_test.c:153:11: [ok] check_initialized(@read_prom)
+analysis/pressure_sensor_test.c:153:11: [ok] check_null_dereference(@read_prom): dereferencing a function pointer
+analysis/pressure_sensor_test.c:76:28: [ok] check_initialized(%read_prom..01)
+analysis/pressure_sensor_test.c:77:48: [ok] check_initialized(%read_prom..01)
+analysis/pressure_sensor_test.c:77:48: [ok] check_initialized(@s_cal)
+analysis/pressure_sensor_test.c:77:48: [ok] check_initialized(%read_prom.1)
+analysis/pressure_sensor_test.c:77:29: [ok] check_initialized(@read_prom_word)
+analysis/pressure_sensor_test.c:77:29: [ok] check_initialized(%read_prom..01)
+analysis/pressure_sensor_test.c:77:29: [ok] check_initialized(%read_prom.2)
+analysis/pressure_sensor_test.c:77:29: [ok] check_null_dereference(@read_prom_word): dereferencing a function pointer
+analysis/pressure_sensor_test.c:53:5: [ok] check_initialized(%read_prom_word.2)
+analysis/pressure_sensor_test.c:53:5: [ok] check_initialized(%read_prom_word.2)
+analysis/pressure_sensor_test.c:53:5: [unreachable] check_mem_access(call @p10_assert_fail(%read_prom_word.4, 53, %read_prom_word.5))
+analysis/pressure_sensor_test.c:53:5: [unreachable] check_null_dereference(call @p10_assert_fail(%read_prom_word.4, 53, %read_prom_word.5))
+analysis/pressure_sensor_test.c:54:5: [ok] check_initialized(%read_prom_word.1)
+analysis/pressure_sensor_test.c:54:5: [ok] check_initialized(%read_prom_word.1)
+analysis/pressure_sensor_test.c:54:5: [unreachable] check_mem_access(call @p10_assert_fail(%read_prom_word.6, 54, %read_prom_word.7))
+analysis/pressure_sensor_test.c:54:5: [unreachable] check_null_dereference(call @p10_assert_fail(%read_prom_word.6, 54, %read_prom_word.7))
+analysis/pressure_sensor_test.c:57:56: [ok] check_initialized(%read_prom_word.1)
+analysis/pressure_sensor_test.c:57:49: [ok] check_initialized(%read_prom_word.8)
+analysis/pressure_sensor_test.c:57:49: [ok] check_initialized(%read_prom_word.9)
+analysis/pressure_sensor_test.c:57:49: [ok] check_initialized(%read_prom_word.10)
+analysis/pressure_sensor_test.c:57:25: [ok] check_initialized(%read_prom_word.11)
+analysis/pressure_sensor_test.c:59:19: [ok] check_initialized(@write_cmd)
+analysis/pressure_sensor_test.c:59:19: [ok] check_initialized(%read_prom_word.12)
+analysis/pressure_sensor_test.c:59:19: [ok] check_null_dereference(@write_cmd): dereferencing a function pointer
+analysis/pressure_sensor_test.c:37:34: [ok] check_initialized($write_cmd.3)
+analysis/pressure_sensor_test.c:37:34: [ok] check_initialized(%write_cmd.1)
+analysis/pressure_sensor_test.c:37:34: [ok] check_mem_access(pointer=$write_cmd.3, access_size=1, address=LocalMemoryLocation{$write_cmd.3}): ∀o ∈ offset, o <= 1 && o + access_size <= 1
+analysis/pressure_sensor_test.c:37:34: [ok] check_null_dereference($write_cmd.3): dereferencing a local variable
+analysis/pressure_sensor_test.c:0:0: [ok] check_initialized(%write_cmd.2)
+analysis/pressure_sensor_test.c:40:72: [ok] check_initialized(%write_cmd.4)
+analysis/pressure_sensor_test.c:40:21: [ok] check_initialized(@i2c_write_blocking)
+analysis/pressure_sensor_test.c:40:21: [ok] check_initialized(%write_cmd.6)
+analysis/pressure_sensor_test.c:40:21: [ok] check_initialized($write_cmd.3)
+analysis/pressure_sensor_test.c:40:21: [ok] check_initialized(%write_cmd.5)
+analysis/pressure_sensor_test.c:40:21: [ok] check_null_dereference(@i2c_write_blocking): dereferencing a function pointer
+analysis/pico_stubs.h:63:12: [ok] check_initialized(%i2c_write_blocking.4)
+analysis/pico_stubs.h:63:12: [ok] check_initialized(%i2c_write_blocking.6)
+analysis/pico_stubs.h:63:5: [ok] check_initialized(%i2c_write_blocking.7)
+analysis/pressure_sensor_test.c:41:17: [ok] check_initialized(%write_cmd.7)
+analysis/pressure_sensor_test.c:41:17: [ok] check_initialized(%write_cmd.7)
+analysis/pressure_sensor_test.c:41:5: [ok] check_initialized(%write_cmd.8)
+analysis/pressure_sensor_test.c:60:13: [ok] check_initialized(%read_prom_word.13)
+analysis/pressure_sensor_test.c:60:13: [ok] check_initialized(%read_prom_word.13)
+analysis/pressure_sensor_test.c:64:22: [ok] check_initialized($read_prom_word.3)
+analysis/pressure_sensor_test.c:64:11: [ok] check_initialized(@read_bytes)
+analysis/pressure_sensor_test.c:64:11: [ok] check_initialized(%read_prom_word.14)
+analysis/pressure_sensor_test.c:64:11: [ok] check_null_dereference(@read_bytes): dereferencing a function pointer
+analysis/pressure_sensor_test.c:45:5: [ok] check_initialized(%read_bytes.1)
+analysis/pressure_sensor_test.c:45:5: [ok] check_initialized(%read_bytes.1)
+analysis/pressure_sensor_test.c:45:5: [unreachable] check_mem_access(call @p10_assert_fail(%read_bytes.3, 45, %read_bytes.4))
+analysis/pressure_sensor_test.c:45:5: [unreachable] check_null_dereference(call @p10_assert_fail(%read_bytes.3, 45, %read_bytes.4))
+analysis/pressure_sensor_test.c:46:5: [ok] check_initialized(%read_bytes.2)
+analysis/pressure_sensor_test.c:46:5: [ok] check_initialized(%read_bytes.2)
+analysis/pressure_sensor_test.c:46:5: [unreachable] check_mem_access(call @p10_assert_fail(%read_bytes.5, 46, %read_bytes.6))
+analysis/pressure_sensor_test.c:46:5: [unreachable] check_null_dereference(call @p10_assert_fail(%read_bytes.5, 46, %read_bytes.6))
+analysis/pressure_sensor_test.c:48:67: [ok] check_initialized(%read_bytes.2)
+analysis/pressure_sensor_test.c:48:21: [ok] check_initialized(@i2c_read_blocking)
+analysis/pressure_sensor_test.c:48:21: [ok] check_initialized(%read_bytes.8)
+analysis/pressure_sensor_test.c:48:21: [ok] check_initialized(%read_bytes.1)
+analysis/pressure_sensor_test.c:48:21: [ok] check_initialized(%read_bytes.7)
+analysis/pressure_sensor_test.c:48:21: [ok] check_null_dereference(@i2c_read_blocking): dereferencing a function pointer
+analysis/pico_stubs.h:70:12: [ok] check_initialized(%i2c_read_blocking.4)
+analysis/pico_stubs.h:70:12: [ok] check_initialized(%i2c_read_blocking.6)
+analysis/pico_stubs.h:70:5: [ok] check_initialized(%i2c_read_blocking.7)
+analysis/pressure_sensor_test.c:49:17: [ok] check_initialized(%read_bytes.9)
+analysis/pressure_sensor_test.c:49:17: [ok] check_initialized(%read_bytes.9)
+analysis/pressure_sensor_test.c:49:5: [ok] check_initialized(%read_bytes.10)
+analysis/pressure_sensor_test.c:65:13: [ok] check_initialized(%read_prom_word.15)
+analysis/pressure_sensor_test.c:65:13: [ok] check_initialized(%read_prom_word.15)
+analysis/pressure_sensor_test.c:69:34: [ok] check_initialized($read_prom_word.3)
+analysis/pressure_sensor_test.c:69:34: [ok] check_initialized(%read_prom_word.16)
+analysis/pressure_sensor_test.c:69:34: [ok] check_initialized(%read_prom_word.17)
+analysis/pressure_sensor_test.c:69:34: [ok] check_mem_access(pointer=%read_prom_word.17, access_size=1, address=LocalMemoryLocation{$read_prom_word.3}): ∀o ∈ offset, o <= 1 && o + access_size <= 1
+analysis/pressure_sensor_test.c:69:34: [ok] check_null_dereference(%read_prom_word.17): pointer is non null
+analysis/pressure_sensor_test.c:69:24: [error] check_initialized(%read_prom_word.18)
+analysis/pressure_sensor_test.c:69:60: [unreachable] check_mem_access(pointer=%read_prom_word.23, access_size=1)
+analysis/pressure_sensor_test.c:69:60: [unreachable] check_null_dereference(%read_prom_word.23)
+analysis/pressure_sensor_test.c:69:10: [unreachable] check_mem_access(pointer=%read_prom_word.2, access_size=2)
+analysis/pressure_sensor_test.c:69:10: [unreachable] check_null_dereference(%read_prom_word.2)
+analysis/pressure_sensor_test.c:76:28: [ok] check_initialized(%read_prom..01)
+analysis/pressure_sensor_test.c:158:19: [unreachable] check_mem_access(pointer=@s_initialized, access_size=1)
+analysis/pressure_sensor_test.c:158:19: [unreachable] check_null_dereference(@s_initialized)
+
+# Time stats:
+clang        : 0.014 sec
+ikos-analyzer: 0.010 sec
+ikos-pp      : 0.003 sec
+
+# Summary:
+Total number of checks                : 53
+Total number of unreachable checks    : 0
+Total number of safe checks           : 52
+Total number of definite unsafe checks: 1
+Total number of warnings              : 0
+
+The program is definitely UNSAFE
+
+# Results
+analysis/pressure_sensor_test.c: In function 'read_prom_word':
+analysis/pressure_sensor_test.c:69:24: error: expression 'data[0]' is uninitialized
+    *out = (uint16_t)(((uint16_t)data[0] << 8) | (uint16_t)data[1]);
+                       ^

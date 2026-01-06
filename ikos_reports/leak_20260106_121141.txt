@@ -1,0 +1,2 @@
+usage: ikos [options] file[.c|.cpp|.bc|.ll]
+ikos: error: argument --display-times: invalid choice: 'yes' (choose from 'full', 'short', 'no')

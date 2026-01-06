@@ -1,0 +1,6 @@
+[*] Compiling /src/src/drivers/valve.c
+/src/src/drivers/valve.c:12:10: fatal error: 'hardware/gpio.h' file not found
+#include "hardware/gpio.h"
+         ^~~~~~~~~~~~~~~~~
+1 error generated.
+ikos: error while compiling /src/src/drivers/valve.c, abort.

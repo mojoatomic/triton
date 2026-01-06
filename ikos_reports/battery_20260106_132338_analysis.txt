@@ -1,0 +1,16 @@
+[*] Compiling /src/analysis/battery_test.c
+In file included from /src/analysis/battery_test.c:3:
+/src/analysis/pico_stubs.h:101:15: error: unknown type name 'absolute_time_t'
+static inline absolute_time_t get_absolute_time(void) {
+              ^
+/src/analysis/pico_stubs.h:102:5: error: use of undeclared identifier 'absolute_time_t'
+    absolute_time_t t = {0};
+    ^
+/src/analysis/pico_stubs.h:103:12: error: use of undeclared identifier 't'
+    return t;
+           ^
+/src/analysis/pico_stubs.h:106:41: error: unknown type name 'absolute_time_t'
+static inline uint32_t to_ms_since_boot(absolute_time_t t) {
+                                        ^
+4 errors generated.
+ikos: error while compiling /src/analysis/battery_test.c, abort.

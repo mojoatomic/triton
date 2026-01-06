@@ -1,0 +1,6 @@
+[*] Compiling /src/analysis/temp_ikos.c
+[*] Running ikos preprocessor
+[*] Running ikos analyzer
+[*] Translating LLVM bitcode to AR
+ikos-analyzer: /tmp/ikos-8rsxynpl/temp_ikos.pp.bc: error: could not find function 'main'
+ikos: error: a run-time error occurred

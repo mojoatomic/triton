@@ -1,0 +1,30 @@
+[*] Compiling /src/analysis/handshake_test.c
+/src/analysis/handshake_test.c:172:19: warning: unused function 'stub_printf' [-Wunused-function]
+static inline int stub_printf(const char* fmt, ...) { (void)fmt; return 0; }
+                  ^
+1 warning generated.
+[*] Running ikos preprocessor
+[*] Running ikos analyzer
+[*] Translating LLVM bitcode to AR
+[*] Running liveness analysis
+[*] Running widening hint analysis
+[*] Running interprocedural value analysis
+[*] Analyzing entry point 'main'
+[*] Checking properties for entry point 'main'
+
+# Time stats:
+clang        : 0.015 sec
+ikos-analyzer: 0.009 sec
+ikos-pp      : 0.003 sec
+
+# Summary:
+Total number of checks                : 0
+Total number of unreachable checks    : 0
+Total number of safe checks           : 0
+Total number of definite unsafe checks: 0
+Total number of warnings              : 0
+
+The program is SAFE
+
+# Results
+No entries.

@@ -1,0 +1,9 @@
+[*] Compiling /src/analysis/depth_ctrl_test.c
+/src/analysis/depth_ctrl_test.c:98:27: error: too few arguments to function call, single argument 'ctrl' was not specified
+    err = depth_ctrl_init();
+          ~~~~~~~~~~~~~~~ ^
+/src/analysis/depth_ctrl_test.c:28:6: note: 'depth_ctrl_init' declared here
+void depth_ctrl_init(DepthController_t* ctrl) {
+     ^
+1 error generated.
+ikos: error while compiling /src/analysis/depth_ctrl_test.c, abort.

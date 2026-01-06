@@ -1,0 +1,9 @@
+[*] Compiling /src/analysis/pid_test.c
+/src/analysis/pid_test.c:123:20: error: too few arguments to function call, expected 4, have 0
+    err = pid_init();
+          ~~~~~~~~ ^
+/src/analysis/pid_test.c:26:6: note: 'pid_init' declared here
+void pid_init(PidController_t* pid, float kp, float ki, float kd) {
+     ^
+1 error generated.
+ikos: error while compiling /src/analysis/pid_test.c, abort.

@@ -1,0 +1,6 @@
+[*] Compiling /src/analysis/imu_test.c
+[*] Running ikos preprocessor
+[*] Running ikos analyzer
+[*] Translating LLVM bitcode to AR
+ikos-analyzer: /tmp/ikos-27ltk6kb/imu_test.pp.bc: error: unsupported llvm instruction: fneg [1]
+ikos: error: a run-time error occurred

@@ -1,0 +1,54 @@
+[*] Compiling /src/analysis/main_test.c
+/src/analysis/main_test.c:128:12: warning: format specifies type 'unsigned long' but the argument has type 'uint32_t' (aka 'unsigned int') [-Wformat]
+           timing.alive_ms, timing.ready_ms, timing.total_ms);
+           ^~~~~~~~~~~~~~~
+/src/analysis/main_test.c:128:29: warning: format specifies type 'unsigned long' but the argument has type 'uint32_t' (aka 'unsigned int') [-Wformat]
+           timing.alive_ms, timing.ready_ms, timing.total_ms);
+                            ^~~~~~~~~~~~~~~
+/src/analysis/main_test.c:128:46: warning: format specifies type 'unsigned long' but the argument has type 'uint32_t' (aka 'unsigned int') [-Wformat]
+           timing.alive_ms, timing.ready_ms, timing.total_ms);
+                                             ^~~~~~~~~~~~~~~
+/src/analysis/main_test.c:301:30: warning: passing 'const ControlInputs_t *' to parameter of type 'void *' discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+    state_machine_update(sm, inputs, depth, now_ms);
+                             ^~~~~~
+/src/analysis/pico_stubs_fixed.h:234:57: note: passing argument to parameter 'inputs' here
+static inline void state_machine_update(void* sm, void* inputs, void* depth, uint32_t now) {
+                                                        ^
+/src/analysis/main_test.c:301:38: warning: passing 'const DepthReading_t *' to parameter of type 'void *' discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+    state_machine_update(sm, inputs, depth, now_ms);
+                                     ^~~~~
+/src/analysis/pico_stubs_fixed.h:234:71: note: passing argument to parameter 'depth' here
+static inline void state_machine_update(void* sm, void* inputs, void* depth, uint32_t now) {
+                                                                      ^
+/src/analysis/main_test.c:215:13: warning: unused function 'init_hardware' [-Wunused-function]
+static void init_hardware(void) {
+            ^
+/src/analysis/main_test.c:526:19: warning: unused function 'stub_printf' [-Wunused-function]
+static inline int stub_printf(const char* fmt, ...) { (void)fmt; return 0; }
+                  ^
+7 warnings generated.
+[*] Running ikos preprocessor
+[*] Running ikos analyzer
+[*] Translating LLVM bitcode to AR
+[*] Running liveness analysis
+[*] Running widening hint analysis
+[*] Running interprocedural value analysis
+[*] Analyzing entry point 'main'
+[*] Checking properties for entry point 'main'
+
+# Time stats:
+clang        : 0.019 sec
+ikos-analyzer: 0.015 sec
+ikos-pp      : 0.004 sec
+
+# Summary:
+Total number of checks                : 187
+Total number of unreachable checks    : 0
+Total number of safe checks           : 187
+Total number of definite unsafe checks: 0
+Total number of warnings              : 0
+
+The program is SAFE
+
+# Results
+No entries.

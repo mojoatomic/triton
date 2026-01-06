@@ -8,12 +8,15 @@
 #include "safety_monitor.h"
 #include "emergency.h"
 #include "config.h"
-#include "battery.h"
-#include "leak.h"
-#include "log.h"
+#include "drivers/battery.h"
+#include "drivers/leak.h"
+#include "util/log.h"
 #include "hardware/watchdog.h"
 #include "hardware/gpio.h"
 #include "pico/time.h"
+
+// Event log pointer (set during init)
+static EventLog_t* s_log = NULL;
 
 // Shared state with Core 1 (volatile for cross-core visibility)
 static volatile FaultFlags_t g_faults = {0};
@@ -45,8 +48,11 @@ void safety_update_pitch(int16_t pitch_x10) {
     g_current_pitch_x10 = pitch_x10;
 }
 
-void safety_monitor_init(void) {
+void safety_monitor_init(EventLog_t* log) {
+    P10_ASSERT(log != NULL);
     P10_ASSERT(WATCHDOG_TIMEOUT_MS > 0);
+
+    s_log = log;
 
     // Enable hardware watchdog (1 second timeout)
     watchdog_enable(WATCHDOG_TIMEOUT_MS, true);
@@ -65,12 +71,12 @@ static void check_rc_signal(uint32_t now_ms) {
     if ((now_ms - g_last_rc_valid_ms) > SIGNAL_TIMEOUT_MS) {
         if (!g_faults.bits.signal_lost) {
             g_faults.bits.signal_lost = 1;
-            log_event(EVT_SIGNAL_LOST, 0, 0);
+            log_event(s_log, now_ms, EVT_SIGNAL_LOST, 0, 0);
         }
     } else {
         if (g_faults.bits.signal_lost) {
             g_faults.bits.signal_lost = 0;
-            log_event(EVT_SIGNAL_RESTORED, 0, 0);
+            log_event(s_log, now_ms, EVT_SIGNAL_RESTORED, 0, 0);
         }
     }
 }
@@ -82,7 +88,8 @@ static void check_battery(void) {
     if (batt_mv < MIN_BATTERY_MV) {
         if (!g_faults.bits.low_battery) {
             g_faults.bits.low_battery = 1;
-            log_event(EVT_LOW_BATTERY, batt_mv >> 8, batt_mv & 0xFF);
+            uint32_t now_ms = to_ms_since_boot(get_absolute_time());
+            log_event(s_log, now_ms, EVT_LOW_BATTERY, (uint8_t)(batt_mv >> 8), (uint8_t)(batt_mv & 0xFF));
         }
     }
 }
@@ -90,11 +97,14 @@ static void check_battery(void) {
 static void check_sensors(void) {
     P10_ASSERT(MAX_DEPTH_CM > 0);
     P10_ASSERT(MAX_PITCH_DEG > 0);
+
+    uint32_t now_ms = to_ms_since_boot(get_absolute_time());
+
     // Check leak
     if (leak_detected()) {
         if (!g_faults.bits.leak) {
             g_faults.bits.leak = 1;
-            log_event(EVT_LEAK_DETECTED, 0, 0);
+            log_event(s_log, now_ms, EVT_LEAK_DETECTED, 0, 0);
         }
     }
 
@@ -102,8 +112,9 @@ static void check_sensors(void) {
     if (g_current_depth_cm > MAX_DEPTH_CM) {
         if (!g_faults.bits.depth_exceeded) {
             g_faults.bits.depth_exceeded = 1;
-            log_event(EVT_DEPTH_EXCEEDED, g_current_depth_cm >> 8,
-                      g_current_depth_cm & 0xFF);
+            log_event(s_log, now_ms, EVT_DEPTH_EXCEEDED,
+                      (uint8_t)(g_current_depth_cm >> 8),
+                      (uint8_t)(g_current_depth_cm & 0xFF));
         }
     }
 
@@ -112,7 +123,7 @@ static void check_sensors(void) {
     if (ABS(pitch_deg) > MAX_PITCH_DEG) {
         if (!g_faults.bits.pitch_exceeded) {
             g_faults.bits.pitch_exceeded = 1;
-            log_event(EVT_PITCH_EXCEEDED, pitch_deg, 0);
+            log_event(s_log, now_ms, EVT_PITCH_EXCEEDED, (uint8_t)pitch_deg, 0);
         }
     }
 }
@@ -125,7 +136,8 @@ static void check_core1_health(void) {
         if (s_stall_count > CORE1_STALL_THRESHOLD) {
             if (!g_faults.bits.core1_stall) {
                 g_faults.bits.core1_stall = 1;
-                log_event(EVT_CORE1_STALL, 0, 0);
+                uint32_t now_ms = to_ms_since_boot(get_absolute_time());
+                log_event(s_log, now_ms, EVT_CORE1_STALL, 0, 0);
                 trigger_emergency_blow(EVT_CORE1_STALL);
             }
         }

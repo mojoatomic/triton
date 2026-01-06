@@ -1,0 +1,3 @@
+ikos: error: unexpected file extension.
+/bin/bash: line 1: 34mPreprocessing:: command not found
+/bin/bash: line 2: /tmp/ikos_triton_98228/safety_monitor.c: Permission denied

@@ -35,6 +35,9 @@
 // Cross-core shared state
 volatile uint32_t g_core1_heartbeat = 0;
 
+// Global event log
+static EventLog_t g_event_log;
+
 // Forward declarations
 void core0_main(void);
 void core1_main(void);
@@ -45,6 +48,7 @@ static void init_controllers(StateMachine_t* sm, DepthController_t* dc,
                            PitchController_t* pc, BallastController_t* bc);
 static void read_sensors(RcFrame_t* rc, DepthReading_t* depth, AttitudeReading_t* att);
 static void process_rc_inputs(const RcFrame_t* rc, ControlInputs_t* inputs);
+static Command_t map_inputs_to_command(const ControlInputs_t* inputs);
 static void run_control_loop(StateMachine_t* sm, DepthController_t* dc,
                             PitchController_t* pc, BallastController_t* bc,
                             const ControlInputs_t* inputs, const DepthReading_t* depth,
@@ -95,8 +99,9 @@ void core0_main(void) {
     printf("Core 0: Safety monitor starting\n");
 
     // Initialize safety systems
-    safety_monitor_init();
-    log_init();
+    log_init(&g_event_log);
+    emergency_init(&g_event_log);
+    safety_monitor_init(&g_event_log);
 
     // 100 Hz safety loop
     const uint32_t loop_period_us = 10000;  // 10 ms
@@ -122,9 +127,9 @@ void core0_main(void) {
 
         // Maintain loop timing
         next_loop_us += loop_period_us;
-        int32_t sleep_us = next_loop_us - time_us_32();
-        if (sleep_us > 0) {
-            sleep_us(sleep_us);
+        int32_t sleep_time_us = (int32_t)(next_loop_us - time_us_32());
+        if (sleep_time_us > 0) {
+            sleep_us((uint32_t)sleep_time_us);
         }
     }
 }
@@ -201,6 +206,19 @@ static void process_rc_inputs(const RcFrame_t* rc, ControlInputs_t* inputs) {
     }
 }
 
+// Map control inputs to state machine command
+static Command_t map_inputs_to_command(const ControlInputs_t* inputs) {
+    P10_ASSERT(inputs != NULL);
+
+    // Simple mapping based on ballast input
+    if (inputs->ballast > 50) {
+        return CMD_DIVE;
+    } else if (inputs->ballast < -50) {
+        return CMD_SURFACE;
+    }
+    return CMD_NONE;
+}
+
 static void run_control_loop(StateMachine_t* sm, DepthController_t* dc,
                             PitchController_t* pc, BallastController_t* bc,
                             const ControlInputs_t* inputs, const DepthReading_t* depth,
@@ -215,23 +233,26 @@ static void run_control_loop(StateMachine_t* sm, DepthController_t* dc,
 
     uint32_t now_ms = to_ms_since_boot(get_absolute_time());
 
+    // Map inputs to command
+    Command_t cmd = map_inputs_to_command(inputs);
+
     // Update state machine
-    state_machine_update(sm, inputs, depth, now_ms);
+    state_machine_process(sm, cmd, depth->depth_cm, now_ms);
 
     // Get current state
-    StateInfo_t state_info;
-    state_machine_get_state(sm, &state_info);
+    MainState_t current_state = state_machine_get_state(sm);
+    bool depth_hold_enabled = state_machine_get_depth_hold_enabled(sm);
 
     // Run controllers based on state
-    if (state_info.mode == MODE_DEPTH_HOLD && state_info.state == STATE_SUBMERGED) {
+    if (depth_hold_enabled && current_state == STATE_SUBMERGED_DEPTH_HOLD) {
         int8_t ballast_cmd = depth_ctrl_update(dc, depth->depth_cm, dt);
-        ballast_ctrl_set_command(bc, ballast_cmd);
+        ballast_ctrl_set_target(bc, ballast_cmd);
     } else {
-        ballast_ctrl_set_command(bc, inputs->ballast);
+        ballast_ctrl_set_target(bc, inputs->ballast);
     }
 
     // Pitch stabilization when submerged
-    if (state_info.state == STATE_SUBMERGED) {
+    if (current_state == STATE_SUBMERGED_MANUAL || current_state == STATE_SUBMERGED_DEPTH_HOLD) {
         int8_t pitch_cmd = pitch_ctrl_update(pc, att->pitch_deg_x10 / 10, dt);
         servo_set_position(SERVO_BOWPLANE, pitch_cmd);
         servo_set_position(SERVO_STERNPLANE, pitch_cmd);
@@ -240,8 +261,19 @@ static void run_control_loop(StateMachine_t* sm, DepthController_t* dc,
         servo_set_position(SERVO_STERNPLANE, 0);
     }
 
-    // Update ballast and rudder
-    ballast_ctrl_update(bc, now_ms);
+    // Update ballast controller
+    int8_t pump_speed;
+    bool valve_should_open;
+    ballast_ctrl_update(bc, now_ms, &pump_speed, &valve_should_open);
+
+    // Apply outputs
+    pump_set_speed(pump_speed);
+    if (valve_should_open) {
+        valve_open();
+    } else {
+        valve_close();
+    }
+
     servo_set_position(SERVO_RUDDER, inputs->rudder);
 }
 
@@ -253,10 +285,10 @@ static void update_debug_output(uint32_t* loops, const StateMachine_t* sm,
 
     (*loops)++;
     if (*loops >= 50) {
-        StateInfo_t info;
-        state_machine_get_state((StateMachine_t*)sm, &info);
-        printf("Core 1: state=%d, mode=%d, depth=%d cm\n",
-               info.state, info.mode, depth->depth_cm);
+        MainState_t current_state = state_machine_get_state(sm);
+        bool depth_hold = state_machine_get_depth_hold_enabled(sm);
+        printf("Core 1: state=%d, depth_hold=%d, depth=%ld cm\n",
+               (int)current_state, (int)depth_hold, (long)depth->depth_cm);
         *loops = 0;
     }
 }
@@ -293,7 +325,7 @@ void core1_main(void) {
     BallastController_t ballast_ctrl;
     init_controllers(&state_machine, &depth_ctrl, &pitch_ctrl, &ballast_ctrl);
 
-    log_event(EVT_INIT_COMPLETE, 0, 0);
+    log_event(&g_event_log, to_ms_since_boot(get_absolute_time()), EVT_INIT_COMPLETE, 0, 0);
 
     // 50 Hz control loop
     const uint32_t loop_period_us = 20000;  // 20 ms
@@ -303,7 +335,7 @@ void core1_main(void) {
 
     while (1) {
         uint32_t now_us = time_us_32();
-        float dt = (now_us - last_loop_us) / 1000000.0f;
+        float dt = (float)(now_us - last_loop_us) / 1000000.0f;
         last_loop_us = now_us;
 
         // Handle heartbeat and emergency check
@@ -330,9 +362,9 @@ void core1_main(void) {
 
         // Maintain timing
         next_loop_us += loop_period_us;
-        int32_t sleep_us_val = next_loop_us - time_us_32();
-        if (sleep_us_val > 0) {
-            sleep_us(sleep_us_val);
+        int32_t sleep_time_us = (int32_t)(next_loop_us - time_us_32());
+        if (sleep_time_us > 0) {
+            sleep_us((uint32_t)sleep_time_us);
         }
     }
 }

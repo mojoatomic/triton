@@ -16,6 +16,7 @@ extern "C" {
 #endif
 
 // Emergency blow public API
+void emergency_init(EventLog_t* log);
 void trigger_emergency_blow(EventCode_t reason);
 void emergency_blow_run(void);
 bool is_emergency_active(void);

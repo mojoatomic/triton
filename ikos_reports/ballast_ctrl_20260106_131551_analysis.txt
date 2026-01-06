@@ -1,0 +1,9 @@
+[*] Compiling /src/analysis/ballast_ctrl_test.c
+/src/analysis/ballast_ctrl_test.c:246:29: error: too few arguments to function call, single argument 'ctrl' was not specified
+    err = ballast_ctrl_init();
+          ~~~~~~~~~~~~~~~~~ ^
+/src/analysis/ballast_ctrl_test.c:115:6: note: 'ballast_ctrl_init' declared here
+void ballast_ctrl_init(BallastController_t* ctrl) {
+     ^
+1 error generated.
+ikos: error while compiling /src/analysis/ballast_ctrl_test.c, abort.

@@ -1,0 +1,15 @@
+IKOS Quick Scan - Tue Jan  6 13:23:03 CST 2026
+========================================
+emergency: TIMEOUT
+handshake: TIMEOUT
+safety_monitor: TIMEOUT
+battery: TIMEOUT
+pressure_sensor: TIMEOUT
+leak: TIMEOUT
+ballast_ctrl: TIMEOUT
+depth_ctrl: TIMEOUT
+pid: TIMEOUT
+pitch_ctrl: TIMEOUT
+state_machine: TIMEOUT
+========================================
+Total: 11, Safe: 0, Unsafe: 0, Errors: 11

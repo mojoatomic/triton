@@ -1,0 +1,6 @@
+[*] Compiling /src/src/safety/safety_monitor.c
+/src/src/safety/safety_monitor.c:14:10: fatal error: 'hardware/watchdog.h' file not found
+#include "hardware/watchdog.h"
+         ^~~~~~~~~~~~~~~~~~~~~
+1 error generated.
+ikos: error while compiling /src/src/safety/safety_monitor.c, abort.
