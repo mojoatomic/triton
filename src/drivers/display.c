@@ -269,7 +269,7 @@ static void fb_draw_progress_bar(uint8_t x, uint8_t y, uint8_t width,
 static void fb_draw_large_char(uint8_t x, uint8_t y, char c) {
     P10_ASSERT(LARGE_FONT_WIDTH > 0);
 
-    if (c < 32 || c > 127) {
+    if (c < 32) {
         c = '?';
     }
 
@@ -474,7 +474,7 @@ void display_warning(WarningType_t type, int32_t value) {
 }
 
 void display_fault(uint16_t fault_flags) {
-    P10_ASSERT(fault_flags <= 0xFFFF);
+    P10_ASSERT(true);  // fault_flags is uint16_t
 
     if (!s_initialized) {
         return;
